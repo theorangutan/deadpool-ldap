@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use ldap3::{exop::WhoAmI, Ldap, LdapConnAsync, LdapConnSettings, LdapError};
+use deadpool::managed::Metrics;
 
 pub struct Manager(String, LdapConnSettings);
 pub type Pool = deadpool::managed::Pool<Manager>;
@@ -37,7 +38,7 @@ impl deadpool::managed::Manager for Manager {
         });
         Ok(ldap)
     }
-    async fn recycle(&self, conn: &mut Self::Type) -> deadpool::managed::RecycleResult<Self::Error> {
+    async fn recycle(&self, conn: &mut Self::Type, _: &Metrics) -> deadpool::managed::RecycleResult<Self::Error> {
         conn.extended(WhoAmI).await?;
         Ok(())
     }
