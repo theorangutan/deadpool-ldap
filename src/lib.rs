@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use ldap3::{Ldap, LdapConnAsync, LdapConnSettings, LdapError};
 use deadpool::managed::Metrics;
 
@@ -21,7 +20,6 @@ impl Manager {
     }
 }
 
-#[async_trait]
 impl deadpool::managed::Manager for Manager {
     type Type = Ldap;
     type Error = LdapError;
